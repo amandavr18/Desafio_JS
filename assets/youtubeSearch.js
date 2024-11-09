@@ -39,4 +39,3 @@ export async function youtubeSearch(useMock = false) {
 }
 
   gapi.load("client");
-

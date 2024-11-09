@@ -10,29 +10,36 @@ const palavrasChaves = localStorage.getItem('palavrasChaves');
 document.getElementById("resultadoPalavras").innerHTML = `<p>Palavras buscadas: ${palavrasChaves}</p>`
 
 
+function carregarVideosDoStorage() {
+    // Recupera o resultado armazenado no localStorage
+    const resultado = localStorage.getItem("youtubeResult");
 
-youtubeSearch()
-    .then(response => {
-        console.log("result", response)
-        if (!response || !response.result || !response.result.items) {
-            console.log("Não há vídeos disponíveis para exibir.");
-            return;
-        }
+    if (!resultado) {
+        console.log("Não há vídeos disponíveis para exibir.");
+        return;
+    }
 
-        // Acessando a lista de vídeos (caso o retorno tenha 'items')
-        response.result.items.forEach(video => {
-            playlist.innerHTML += `
-                <div class="mb-3 video">
-                    <label>Video</label>
-                    <div class="input-group">
-                        <p>${video.snippet.title}</p>
-                        <img src="${video.snippet.thumbnails.default.url}" alt="${video.snippet.title}">
-                        <a href="https://www.youtube.com/watch?v=${video.id.videoId}" target="_blank">Assistir</a>
-                    </div>
+    const response = JSON.parse(resultado);
+
+    if (!response.result || !response.result.items) {
+        console.log("Não há vídeos disponíveis para exibir.");
+        return;
+    }
+
+    // Exibe os vídeos
+    response.result.items.forEach(video => {
+        playlist.innerHTML += `
+            <div class="mb-3 video">
+                <label>Video</label>
+                <div class="input-group">
+                    <p>${video.snippet.title}</p>
+                    <img src="${video.snippet.thumbnails.default.url}" alt="${video.snippet.title}">
+                    <a href="https://www.youtube.com/watch?v=${video.id.videoId}" target="_blank">Assistir</a>
                 </div>
-            `;
-        });
-    })
-    .catch(err => {
-        console.error("Erro ao carregar os vídeos:", err); // Exibe erro caso ocorra
+            </div>
+        `;
     });
+}
+
+// Carrega os vídeos ao carregar a página
+window.onload = carregarVideosDoStorage;
