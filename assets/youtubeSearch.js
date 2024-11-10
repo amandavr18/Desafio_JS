@@ -3,6 +3,7 @@
 import { videos } from "./mock.js";
 
 
+// faço a busca com as palavras chaves seleciondas pelo usuário
 export async function youtubeSearch(useMock = false) {
     try {
         //pegando o que foi salvo em localstorage
@@ -25,12 +26,36 @@ export async function youtubeSearch(useMock = false) {
                 "part": [
                 "snippet"
                 ],
-                "maxResults": 50,
+                "maxResults": 200,
                 "q": palavrasChaves
             });
 
             console.log("Response", response);
+
             return response;
+
+             } catch (e) {
+                    console.error("Erro na busca do YouTube:", e);
+                    return null;
+                }
+                      
+}
+
+
+// pego os ids do resultado da busca
+export async function getIds(response) {
+    try {
+
+        // Verificação se tem response
+        if (!response) {
+            console.error("nao tem response");
+            return null;
+        }
+
+        const ids = response.result.items.map(item => item.id.videoId);
+            console.log("ids", ids);
+
+            return ids;
 
              } catch (e) {
                     console.error("Erro na busca do YouTube:", e);
@@ -38,4 +63,26 @@ export async function youtubeSearch(useMock = false) {
                 }
 }
 
-  gapi.load("client");
+
+// faço uma nova busca nos ids dos videos para trazer o ContentDetail que possui a informação de duração do vídeo
+export async function getContentDetails(ids) {
+    try {
+    const listContentDetails = await gapi.client.youtube.videos.list({
+      "part": [
+        "contentDetails"
+      ],
+      "id": [
+        ids
+      ]
+    })
+    console.log("listContentDetails", listContentDetails);
+    return listContentDetails;
+
+    } catch (e) {
+        console.error("Erro na busca da minutagem do YouTube:", e);
+        return null;
+    }
+}
+
+
+gapi.load("client");

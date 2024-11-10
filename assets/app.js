@@ -1,5 +1,7 @@
 import { Tempos } from "./tempos.js"
 import { youtubeSearch } from "./youtubeSearch.js";
+import { getIds } from "./youtubeSearch.js";
+import { getContentDetails } from "./youtubeSearch.js";
 
 const tempos = new Tempos()
 
@@ -14,13 +16,13 @@ function getTempos() {
     tempos.diasSemana.domingo = document.getElementById("domingo").value;
 
     // armazenar no localStorage para usar na outra página
-    localStorage.setItem('segunda', tempos.diasSemana.segunda);
-    localStorage.setItem('terca', tempos.diasSemana.terca);
-    localStorage.setItem('quarta', tempos.diasSemana.quarta);
-    localStorage.setItem('quinta', tempos.diasSemana.quinta);
-    localStorage.setItem('sexta', tempos.diasSemana.sexta);
-    localStorage.setItem('sabado', tempos.diasSemana.sabado);
-    localStorage.setItem('domingo', tempos.diasSemana.domingo);
+    localStorage.setItem('dia_segunda', tempos.diasSemana.segunda);
+    localStorage.setItem('dia_terca', tempos.diasSemana.terca);
+    localStorage.setItem('dia_quarta', tempos.diasSemana.quarta);
+    localStorage.setItem('dia_quinta', tempos.diasSemana.quinta);
+    localStorage.setItem('dia_sexta', tempos.diasSemana.sexta);
+    localStorage.setItem('dia_sabado', tempos.diasSemana.sabado);
+    localStorage.setItem('dia_domingo', tempos.diasSemana.domingo);
 }
 
 // pega as palavras-chaves digitadas
@@ -46,7 +48,7 @@ async function salvar() {
     getPalavrasChaves();
 
     try {
-        // Aguarda o carregamento completo do cliente
+        // aguarda o carregamento completo do cliente
         await loadClientApi();
         
         const resultado = await youtubeSearch();
@@ -54,9 +56,22 @@ async function salvar() {
         if (!resultado) {
             console.log("Não há vídeos.");
         } else {
+            //salva os videos no localStorage para usar na página videos.html
             localStorage.setItem("youtubeResult", JSON.stringify(resultado));
-            window.location.href = "./videos.html";
             console.log("Resultado da busca:", resultado);
+            
+            //chama os ids e salva no localStorage para usar na página videos.html
+            const listId = await getIds(resultado)
+            localStorage.setItem("listaIds", JSON.stringify(listId));
+            console.log("ids", listId)
+
+            //busca o contentDetails dos ids salvos e salva no localStorage para usar na página videos.html
+            const listContentDetails = await getContentDetails(listId)
+            localStorage.setItem("listContentDetails", JSON.stringify(listContentDetails));
+            console.log("contentDetails", listContentDetails)
+
+            //redireciona para a página com os videos
+            window.location.href = "./videos.html";
         }
     } catch (err) {
         console.error("Erro ao carregar o cliente YouTube ou ao buscar vídeos:", err);
