@@ -1,28 +1,16 @@
-import { Tempos } from "./tempos.js"
 import { youtubeSearch } from "./youtubeSearch.js";
 import { getIds } from "./youtubeSearch.js";
 import { getContentDetails } from "./youtubeSearch.js";
 
-const tempos = new Tempos()
-
 //função para pegar os valores digitados nos campos de cada dia da semana
 function getTempos() {
-    tempos.diasSemana.segunda = document.getElementById("segunda").value, 'segunda';
-    tempos.diasSemana.terca = document.getElementById("terca").value;
-    tempos.diasSemana.quarta = document.getElementById("quarta").value;
-    tempos.diasSemana.quinta = document.getElementById("quinta").value;
-    tempos.diasSemana.sexta = document.getElementById("sexta").value;
-    tempos.diasSemana.sabado = document.getElementById("sabado").value;
-    tempos.diasSemana.domingo = document.getElementById("domingo").value;
 
-    // armazenar no localStorage para usar na outra página
-    localStorage.setItem('dia_segunda', tempos.diasSemana.segunda);
-    localStorage.setItem('dia_terca', tempos.diasSemana.terca);
-    localStorage.setItem('dia_quarta', tempos.diasSemana.quarta);
-    localStorage.setItem('dia_quinta', tempos.diasSemana.quinta);
-    localStorage.setItem('dia_sexta', tempos.diasSemana.sexta);
-    localStorage.setItem('dia_sabado', tempos.diasSemana.sabado);
-    localStorage.setItem('dia_domingo', tempos.diasSemana.domingo);
+    const diasSemana = ["segunda", "terca", "quarta", "quinta", "sexta", "sabado", "domingo"];
+
+    diasSemana.forEach(dia => {
+        const valor = document.getElementById(dia).value;
+        localStorage.setItem(`dia_${dia}`, valor);
+    });
 }
 
 // pega as palavras-chaves digitadas
