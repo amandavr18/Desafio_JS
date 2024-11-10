@@ -1,22 +1,11 @@
 
-// import { getPalavrasChaves } from "./app.js";
-import { videos } from "./mock.js";
-
-
 // faço a busca com as palavras chaves seleciondas pelo usuário
-export async function youtubeSearch(useMock = false) {
+export async function youtubeSearch() {
     try {
         //pegando o que foi salvo em localstorage
         const palavrasChaves = localStorage.getItem('palavrasChaves');
 
-        console.log("Palavras-Chaves:", palavrasChaves);
-
-        if(useMock) {
-            console.log("usando mock")
-            return Promise.resolve(videos)
-        } 
-
-        // Verificação se o cliente YouTube foi carregado
+        // verifica se o cliente foi carregado
         if (!gapi.client.youtube) {
             console.error("Cliente YouTube não carregado. Aguarde o carregamento completo antes de realizar a busca.");
             return null;
@@ -42,11 +31,11 @@ export async function youtubeSearch(useMock = false) {
 }
 
 
-// pego os ids do resultado da busca
+// pego os ids do resultado da busca para fazer uma nova consulta e pegar a duração dos vídeos
 export async function getIds(response) {
     try {
 
-        // Verificação se tem response
+        // verifica se tem response
         if (!response) {
             console.error("nao tem response");
             return null;
@@ -75,7 +64,7 @@ export async function getContentDetails(ids) {
         ids
       ]
     })
-    console.log("listContentDetails", listContentDetails);
+    
     return listContentDetails;
 
     } catch (e) {

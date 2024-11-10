@@ -6,8 +6,6 @@ const palavrasChaves = localStorage.getItem('palavrasChaves');
 document.getElementById("resultadoPalavras").innerHTML = `<p>Palavras buscadas: ${palavrasChaves}</p>`
 
 
-
-
 // Função para filtrar vídeos com base no limite de duração por dia
 function filtrarVideosPorDia(videos, dias, listContentDetails) {
     return dias.map(dia => {
