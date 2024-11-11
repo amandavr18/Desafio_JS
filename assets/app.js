@@ -45,15 +45,43 @@ export function getPalavrasChaves() {
     return palavrasChaves;
 }
 
+// // faz a autenticação da API
+// function loadClientApi() {
+//     gapi.client.setApiKey("---");
+//     return gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
+//         .then(function() { console.log("GAPI client loaded for API"); },
+//                 function(err) { console.error("Error loading GAPI client for API", err); });
+// }
+
 // faz a autenticação da API
-function loadClientApi() {
-    gapi.client.setApiKey("---");
-    return gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
-        .then(function() { console.log("GAPI client loaded for API"); },
-                function(err) { console.error("Error loading GAPI client for API", err); });
+/**
+    A ideia por traz deste refactor da função loadClientApi é 
+    tornar o código mais legível e mais estruturado.
+    e deixando a identação do código mais alinhada e 
+    separando numa segunda linha a função load para economizar espaço horizontal.
+    E usar o async await para tornar o código mais padronizasdo
+    com outras linguagens de programação que utilizam um paradigma 
+    síncrono.
+*/
+async function loadClientApi() {
+    gapi.client.setApiKey('---')
+    
+    try {
+        const result = await gapi.client
+            .load('https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest')
+        // Do something with the result if needed!
+    } catch(error) {
+        console.error('', error)
+    } finally {
+        /**
+            Faz alguma coisa como finalizar loadings
+            Ou alguma ação que independa de sucesso ou erro
+        */
+    }
 }
 
 //executa as funções de busca com os dados inseridos e salva em localStorage
+// Muito bom!!!! :) 
 async function salvar() {
     getTempos();
     getPalavrasChaves();
