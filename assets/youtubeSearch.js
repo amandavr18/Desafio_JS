@@ -26,8 +26,11 @@ export async function youtubeSearch() {
              } catch (e) {
                     console.error("Erro na busca do YouTube:", e);
                     return null;
+                /**
+                    Sempre preste atenção na identação dos curly braces, muito importante 
+                    pois mostra zelo e organização no código
+                */
                 }
-                      
 }
 
 
@@ -46,6 +49,9 @@ export async function getIds(response) {
 
             return ids;
 
+                /**
+                    Mesma coisa aqui, prestar atenção na identação do código
+                */
              } catch (e) {
                     console.error("Erro na busca do YouTube:", e);
                     return null;
