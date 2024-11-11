@@ -1,8 +1,21 @@
 
 //pegando do local storage as palavras que foram salvas na página anterior
+// Você pretende manter as palavras-chave independentemente de sessão? 
+// por exemplo: a próxima vez que abrir o app você pretende acessar 
+// as mesmas palavas-chave que foram pesquisadas anteriormente? 
+// Caso sim, ok. Caso não, você poderia utilizar o Session Storage.
 const palavrasChaves = localStorage.getItem('palavrasChaves');
 
 // colocando na tela o termo buscado recuperado do localStorage
+/**
+    existe algum mecanismo de fail safe (Falhar seguramente)?
+    Por exemplo: Se eu acessar esta página sem ter selecionado palavras chave
+    o que acontece?
+
+    Temos alguns fluxos de uso como por exemplo o happy path, que você codou,
+    mas e potenciais erros. quais seriam esses erros, o que aconteceria com a
+    aplicação caso houvessem erros?
+*/
 document.getElementById("resultadoPalavras").innerHTML = `<p>Palavras buscadas: ${palavrasChaves}</p>`
 
 
@@ -13,6 +26,7 @@ function filtrarVideosPorDia(videos, dias, listContentDetails) {
         const videosFiltrados = [];
 
         videos.forEach(video => {
+            
             const videoId = video.id.videoId;
 
             // Verificando se o videoId existe no listContentDetails
@@ -20,6 +34,11 @@ function filtrarVideosPorDia(videos, dias, listContentDetails) {
 
             if (!videoDetails) {
                 console.log(`Detalhes não encontrados para o vídeo: ${videoId}`);
+                /**
+                    NIT PICK: 
+                    Talvez fosse melhor identificar 
+                    o video também com o nome do video?
+                */
                 return;  // Se não encontrar os detalhes, pula esse vídeo
             }
 
@@ -82,6 +101,16 @@ function buscarDias() {
     return dias;
 }
 
+/**
+    Na função a seguir eu sugeriria que alguns passos fossem 
+    quebrados em funções menores, especifica e mais testáveis.
+    
+    Por quá? 
+    A função abaixo funciona, ok! Porém e os testes unitário?
+    E quantas coisas diferentes essa função faz? 
+    E se esta função somente chamasse outras funções,
+    para fazer a composição e tornar o código mais legível?
+*/
 function carregarVideosDoStorage() {
     const playlist = document.getElementById("playlist");
 
@@ -93,6 +122,10 @@ function carregarVideosDoStorage() {
     console.log("Detalhes recuperados:", listContentDetails);
 
     // Recuperando os dias armazenados no localStorage
+    /**
+        Por exemplo o código abaixo poderia estar numa
+        função de validação que retorna um booleano
+    */
     const dias = buscarDias();
     if (!dias || Object.keys(dias).length === 0) {
         console.log("Não há informações de dias no localStorage.");
@@ -101,6 +134,10 @@ function carregarVideosDoStorage() {
     }
 
     // Filtrando os vídeos com base nos dias e suas durações
+    /**
+        Esse código abaixo também poderia estar em uma outra 
+        função que retorna um booleano.
+    */
     const videosPorDia = filtrarVideosPorDia(resultado.result.items, dias, listContentDetails);
     if (!videosPorDia || videosPorDia.length === 0) {
         console.log("Não há vídeos para exibir para os dias selecionados.");
@@ -112,6 +149,10 @@ function carregarVideosDoStorage() {
     console.log("Vídeos filtrados por dia:", videosPorDia);
 
     // Iterando sobre os dias e vídeos filtrados
+    /**
+        Aqui também poderia estar em outra função que você passaria
+        um objeto de config e controlaria somente o loop
+    */
     videosPorDia.forEach(diaObj => {
         // Título com o tempo total escolhido
         playlist.innerHTML += `<h4>Vídeos para ${diaObj.dia}</h4> <p>Tempo total: escolhido ${diaObj.maxDuration}m</p>`;
@@ -127,7 +168,12 @@ function carregarVideosDoStorage() {
                 const videoId = video.id.videoId;
                 const videoDetails = listContentDetails.find(item => item.id === videoId);
 
+                /**
+                    Aqui também, você poderia conter esse código 
+                    em outra função de render.
+                */
                 if (videoDetails) {
+                    
                     const videoDuration = videoDetails.contentDetails.duration;
                     const videoDurationInMinutes = parseDuration(videoDuration);
                     const hours = Math.floor(videoDurationInMinutes / 60);
@@ -162,11 +208,6 @@ function carregarVideosDoStorage() {
     });
 }
 
-
-
-
-
-
-
 // Carrega os vídeos ao carregar a página
 window.onload = carregarVideosDoStorage;
+
