@@ -1,11 +1,33 @@
-import { youtubeSearch } from "./youtubeSearch.js";
-import { getIds } from "./youtubeSearch.js";
-import { getContentDetails } from "./youtubeSearch.js";
+// import { youtubeSearch } from "./youtubeSearch.js";
+// import { getIds } from "./youtubeSearch.js";
+// import { getContentDetails } from "./youtubeSearch.js";
+// o códico acima poderia ser reescrito da seguinte forma
+import {
+    youtubeSearch,
+    getIds,
+    getContentDetails,
+} from './youtubeSearch'
 
 //função para pegar os valores digitados nos campos de cada dia da semana
 function getTempos() {
 
     const diasSemana = ["segunda", "terca", "quarta", "quinta", "sexta", "sabado", "domingo"];
+    /** 
+        o array acima poderia ser reescrito em diversas linhas,
+        pois dependendo do tamanho da tela disponível fica com scroll horizontal.
+
+        exemplo:
+        
+        const diasSemana = [
+            "segunda",
+            "terca",
+            "quarta",
+            "quinta",
+            "sexta",
+            "sabado",
+            "domingo"
+        ];    
+    */
 
     diasSemana.forEach(dia => {
         const valor = document.getElementById(dia).value;
